@@ -73,3 +73,10 @@ export function linkHost(url: string | null | undefined): string {
     return url
   }
 }
+
+const percent = new Intl.NumberFormat('en', { style: 'percent', maximumFractionDigits: 0 })
+
+/** 0.4 -> "40%"; null (no data to divide by) -> "–". */
+export function formatPercent(value: number | null | undefined): string {
+  return value == null ? '–' : percent.format(value)
+}

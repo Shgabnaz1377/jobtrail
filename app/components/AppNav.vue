@@ -2,6 +2,7 @@
 const links = [
   { to: '/board', label: 'Board' },
   { to: '/applications', label: 'Applications' },
+  { to: '/stats', label: 'Stats' },
 ]
 
 const route = useRoute()

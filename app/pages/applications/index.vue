@@ -248,9 +248,10 @@ const SORT_LABELS: Record<(typeof APPLICATION_SORTS)[number], string> = {
 }
 
 .chip[aria-pressed='true'] {
-  color: var(--accent-contrast);
-  background: var(--chip-color, var(--accent));
+  color: var(--text);
+  background: color-mix(in srgb, var(--chip-color, var(--accent)) 18%, var(--surface));
   border-color: var(--chip-color, var(--accent));
+  box-shadow: inset 0 0 0 1px var(--chip-color, var(--accent));
 }
 
 .chip-wishlist { --chip-color: var(--status-wishlist); }
