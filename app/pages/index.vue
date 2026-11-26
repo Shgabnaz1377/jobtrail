@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const { loggedIn } = useUserSession()
+const demo = useDemo()
 
 if (loggedIn.value) {
   await navigateTo(HOME_ROUTE)
@@ -21,13 +22,25 @@ if (loggedIn.value) {
         >
           Create a free account
         </NuxtLink>
-        <NuxtLink
-          to="/login"
+        <button
+          type="button"
           class="btn"
+          :disabled="demo.pending.value"
+          @click="demo.start"
         >
-          Sign in
-        </NuxtLink>
+          {{ demo.pending.value ? 'Preparing demo…' : 'Try the demo' }}
+        </button>
       </div>
+      <p
+        v-if="demo.error.value"
+        class="alert demo-error"
+        role="alert"
+      >
+        {{ demo.error.value }}
+      </p>
+      <p class="muted small">
+        The demo opens a private account filled with sample applications. It is deleted after 24 hours.
+      </p>
     </section>
 
     <ul class="features">
@@ -69,6 +82,14 @@ if (loggedIn.value) {
   font-size: 1.1rem;
   color: var(--text-muted);
   margin-bottom: 1.5rem;
+}
+
+.demo-error {
+  margin-top: 1rem;
+}
+
+.hero .row + .muted {
+  margin-top: 0.9rem;
 }
 
 .features {

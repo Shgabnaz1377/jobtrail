@@ -1,10 +1,10 @@
 <script setup lang="ts">
 const { loggedIn, user, clear } = useUserSession()
 
-async function signOut() {
+async function signOut(next = '/login') {
   await $fetch('/api/auth/logout', { method: 'POST' })
   await clear()
-  await navigateTo('/login')
+  await navigateTo(next)
 }
 </script>
 
@@ -45,7 +45,7 @@ async function signOut() {
             <button
               type="button"
               class="btn btn-sm"
-              @click="signOut"
+              @click="signOut()"
             >
               Sign out
             </button>
@@ -67,6 +67,20 @@ async function signOut() {
         </div>
       </div>
     </header>
+
+    <p
+      v-if="user?.isDemo"
+      class="demo-banner"
+    >
+      You are exploring a demo account with sample data. Feel free to change anything; it is deleted within 24 hours.
+      <button
+        type="button"
+        class="link-button"
+        @click="signOut('/register')"
+      >
+        Create your own account
+      </button>
+    </p>
 
     <main
       id="main"
@@ -146,6 +160,25 @@ async function signOut() {
   gap: 0.4rem;
   font-weight: 600;
   font-size: 0.9rem;
+}
+
+.demo-banner {
+  margin: 0;
+  padding: 0.5rem 1rem;
+  text-align: center;
+  font-size: 0.875rem;
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+.link-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 main:focus {
