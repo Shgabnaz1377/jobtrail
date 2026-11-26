@@ -39,7 +39,9 @@ jobs:
 
   e2e:
     name: Browser smoke test (Playwright)
-    runs-on: ubuntu-latest
+    # Pinned: on the ubuntu-latest (26.04) image, apt-get update fails on a
+    # third-party repository, which breaks `playwright install --with-deps`.
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
