@@ -3,12 +3,24 @@ import { defineVitestProject } from '@nuxt/test-utils/config'
 
 export default defineConfig({
   test: {
+    // PGlite (WASM) instances and the API suites' Nuxt builds are memory-hungry;
+    // running files one at a time keeps CI and laptops from running out of memory.
+    fileParallelism: false,
     projects: [
       {
         test: {
           name: 'unit',
           include: ['test/unit/**/*.test.ts'],
           environment: 'node',
+        },
+      },
+      {
+        test: {
+          name: 'api',
+          include: ['test/api/**/*.test.ts'],
+          environment: 'node',
+          testTimeout: 30_000,
+          hookTimeout: 240_000,
         },
       },
       await defineVitestProject({
