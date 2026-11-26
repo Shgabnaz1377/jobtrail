@@ -23,11 +23,13 @@
   --focus: #6366f1;
   --shadow: 0 1px 2px rgb(16 24 40 / 6%), 0 1px 3px rgb(16 24 40 / 8%);
   --shadow-lg: 0 10px 30px rgb(16 24 40 / 12%);
-  --status-wishlist: #7c6fd6;
+  /* Stage colours for chart marks and dots only (never text). Validated for
+     adjacent-pair colour-vision separation; charts also label every stage. */
+  --status-wishlist: #b08ae8;
   --status-applied: #2f7bd8;
   --status-interview: #b47a06;
-  --status-offer: #1e9a55;
-  --status-rejected: #c94450;
+  --status-offer: #2fae62;
+  --status-rejected: #a3243a;
 }
 
 /* Dark palette: applied when the user picks "dark", or picks "system" on a dark OS. */
@@ -51,11 +53,11 @@
     --focus: #a5b4fc;
     --shadow: 0 1px 2px rgb(0 0 0 / 40%);
     --shadow-lg: 0 10px 30px rgb(0 0 0 / 50%);
-    --status-wishlist: #a49bf0;
-    --status-applied: #6aa8f5;
-    --status-interview: #f0b93f;
-    --status-offer: #4ccb7f;
-    --status-rejected: #f2757c;
+    --status-wishlist: #c4a6f5;
+    --status-applied: #4f8fe6;
+    --status-interview: #d9a030;
+    --status-offer: #46c27a;
+    --status-rejected: #d0485c;
   }
 }
 
@@ -78,11 +80,11 @@
   --focus: #a5b4fc;
   --shadow: 0 1px 2px rgb(0 0 0 / 40%);
   --shadow-lg: 0 10px 30px rgb(0 0 0 / 50%);
-  --status-wishlist: #a49bf0;
-  --status-applied: #6aa8f5;
-  --status-interview: #f0b93f;
-  --status-offer: #4ccb7f;
-  --status-rejected: #f2757c;
+  --status-wishlist: #c4a6f5;
+  --status-applied: #4f8fe6;
+  --status-interview: #d9a030;
+  --status-offer: #46c27a;
+  --status-rejected: #d0485c;
 }
 
 /* ---------- Base ---------- */

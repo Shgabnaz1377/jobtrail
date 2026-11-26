@@ -20,15 +20,16 @@ defineProps<{ status: Status }>()
 
 <style scoped>
 .status-badge {
-  color: var(--status-color);
-  background: color-mix(in srgb, var(--status-color) 13%, transparent);
+  /* Text stays in the text ink; the dot carries the stage colour. */
+  color: var(--text);
+  background: color-mix(in srgb, var(--status-color) 16%, transparent);
 }
 
 .dot {
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 50%;
-  background: currentcolor;
+  background: var(--status-color);
 }
 
 .status-wishlist { --status-color: var(--status-wishlist); }
