@@ -13,6 +13,8 @@ export interface TimelineEvent {
   toStatus: Status | null
 }
 
+const time = useLocalTime()
+
 const props = defineProps<{
   applicationId: string
   events: TimelineEvent[]
@@ -210,7 +212,7 @@ const isOverdue = (event: TimelineEvent) =>
             class="muted small"
             :datetime="event.occursAt"
           >
-            {{ formatDateTime(event.occursAt) }} · {{ formatRelative(event.occursAt) }}
+            {{ time.dateTime(event.occursAt) }}<template v-if="time.ready.value"> · {{ time.relative(event.occursAt) }}</template>
           </time>
           <p
             v-if="event.notes"

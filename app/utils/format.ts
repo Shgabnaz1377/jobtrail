@@ -24,13 +24,7 @@ export function formatSalary(min: number | null | undefined, max: number | null 
 }
 
 const dateFormat = new Intl.DateTimeFormat('en', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' })
-const dateTimeFormat = new Intl.DateTimeFormat('en', {
-  weekday: 'short',
-  day: 'numeric',
-  month: 'short',
-  hour: '2-digit',
-  minute: '2-digit',
-})
+const dateTimeFormats = new Map<string, Intl.DateTimeFormat>()
 
 /** Formats a calendar date ("2026-03-04") without shifting it by the local time zone. */
 export function formatDay(value: string | null | undefined): string {
@@ -38,8 +32,22 @@ export function formatDay(value: string | null | undefined): string {
   return dateFormat.format(new Date(`${value.slice(0, 10)}T00:00:00Z`))
 }
 
-export function formatDateTime(value: string | Date): string {
-  return dateTimeFormat.format(new Date(value))
+/** "Thu, 27 Nov, 09:30" in `timeZone`, or in the runtime's own zone when it is omitted. */
+export function formatDateTime(value: string | Date, timeZone?: string): string {
+  const key = timeZone ?? ''
+  let format = dateTimeFormats.get(key)
+  if (!format) {
+    format = new Intl.DateTimeFormat('en', {
+      weekday: 'short',
+      day: 'numeric',
+      month: 'short',
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZone,
+    })
+    dateTimeFormats.set(key, format)
+  }
+  return format.format(new Date(value))
 }
 
 const relative = new Intl.RelativeTimeFormat('en', { numeric: 'auto' })
