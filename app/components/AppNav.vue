@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const links = [
+  { to: '/board', label: 'Board' },
   { to: '/applications', label: 'Applications' },
 ]
 
