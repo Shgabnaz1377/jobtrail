@@ -38,7 +38,7 @@ const query = computed(() => ({
 // Keep filters in the URL so they survive reloads and can be shared.
 watch(query, value => router.replace({ query: value }))
 
-const { data: applications, status: fetchStatus } = await useFetch('/api/applications', { query })
+const { data: applications, status: fetchStatus, refresh } = await useFetch('/api/applications', { query })
 
 function toggleStatus(status: Status) {
   statuses.value = statuses.value.includes(status)
@@ -67,7 +67,8 @@ const SORT_LABELS: Record<(typeof APPLICATION_SORTS)[number], string> = {
   <div class="container">
     <header class="page-header">
       <h1>Applications</h1>
-      <div class="row">
+      <div class="row header-actions">
+        <CsvTools @imported="refresh()" />
         <NuxtLink
           to="/applications/new"
           class="btn btn-primary"
@@ -213,6 +214,10 @@ const SORT_LABELS: Record<(typeof APPLICATION_SORTS)[number], string> = {
 </template>
 
 <style scoped>
+.header-actions {
+  align-items: flex-start;
+}
+
 .filters {
   display: grid;
   gap: 1rem;
