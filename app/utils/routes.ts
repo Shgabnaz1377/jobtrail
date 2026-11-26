@@ -1,5 +1,5 @@
 /** Where signed-in users land. */
-export const HOME_ROUTE = '/'
+export const HOME_ROUTE = '/applications'
 
 /** Only allow same-origin, path-only redirects (no `//evil.example` or `/\evil.example`). */
 export function safeRedirect(value: unknown, fallback = HOME_ROUTE): string {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-const { loggedIn, user } = useUserSession()
+const { loggedIn } = useUserSession()
 
-if (loggedIn.value && HOME_ROUTE !== '/') {
+if (loggedIn.value) {
   await navigateTo(HOME_ROUTE)
 }
 </script>
@@ -14,18 +14,7 @@ if (loggedIn.value && HOME_ROUTE !== '/') {
         JobTrail keeps every application on one board, from the wishlist to the offer,
         with interview dates, follow-up reminders and honest numbers about how it is going.
       </p>
-      <div
-        v-if="loggedIn && user"
-        class="row"
-      >
-        <p class="muted">
-          Signed in as {{ user.name }}.
-        </p>
-      </div>
-      <div
-        v-else
-        class="row"
-      >
+      <div class="row">
         <NuxtLink
           to="/register"
           class="btn btn-primary"
