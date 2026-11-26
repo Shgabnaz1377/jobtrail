@@ -1,7 +1,11 @@
 <script setup lang="ts">
 const links = [
-  { to: '/', label: 'Home' },
+  { to: '/applications', label: 'Applications' },
 ]
+
+const route = useRoute()
+// Sections own every page below them (e.g. /applications/123/edit).
+const isActive = (to: string) => route.path === to || route.path.startsWith(`${to}/`)
 </script>
 
 <template>
@@ -14,6 +18,8 @@ const links = [
       :key="link.to"
       :to="link.to"
       class="app-nav-link"
+      :class="{ active: isActive(link.to) }"
+      :aria-current="isActive(link.to) ? 'page' : undefined"
     >
       {{ link.label }}
     </NuxtLink>
@@ -41,8 +47,7 @@ const links = [
   background: var(--surface-2);
 }
 
-.app-nav-link.router-link-exact-active,
-.app-nav-link.router-link-active:not([href='/']) {
+.app-nav-link.active {
   color: var(--accent);
   background: var(--accent-soft);
 }
