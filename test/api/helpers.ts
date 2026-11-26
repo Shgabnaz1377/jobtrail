@@ -1,7 +1,12 @@
 import { fileURLToPath } from 'node:url'
+import { beforeAll } from 'vitest'
 import { setup, url } from '@nuxt/test-utils/e2e'
 
 export const CRON_SECRET = 'test-cron-secret'
+
+// The test-utils context is only reachable from the top-level suite, so the
+// server's address is captured once and reused by nested describe blocks.
+let baseUrl = ''
 
 /** Builds the app once per test file and serves it against an in-memory PGlite database. */
 export async function setupServer() {
@@ -15,6 +20,9 @@ export async function setupServer() {
       PGLITE_DATA_DIR: 'memory://',
       CRON_SECRET,
     },
+  })
+  beforeAll(() => {
+    baseUrl = url('/')
   })
 }
 
@@ -38,7 +46,7 @@ export function createAgent() {
     headers: Record<string, string> = {},
   ): Promise<ApiResponse<T>> {
     const isText = typeof body === 'string'
-    const response = await fetch(url(path), {
+    const response = await fetch(new URL(path, baseUrl), {
       method,
       redirect: 'manual',
       headers: {
