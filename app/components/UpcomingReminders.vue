@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { EVENT_KIND_LABELS } from '#shared/constants'
 
+const time = useLocalTime()
 const { data: reminders, refresh } = await useFetch('/api/reminders', { query: { days: 14 } })
 
 const busy = ref<string | null>(null)
@@ -46,12 +47,13 @@ async function markDone(id: string) {
         :class="{ overdue: reminder.overdue }"
       >
         <div class="when">
-          <time :datetime="String(reminder.occursAt)">{{ formatDateTime(reminder.occursAt) }}</time>
+          <time :datetime="String(reminder.occursAt)">{{ time.dateTime(reminder.occursAt) }}</time>
           <span
+            v-if="reminder.overdue || time.ready.value"
             class="badge"
             :class="reminder.overdue ? 'badge-overdue' : ''"
           >
-            {{ reminder.overdue ? 'Overdue' : formatRelative(reminder.occursAt) }}
+            {{ reminder.overdue ? 'Overdue' : time.relative(reminder.occursAt) }}
           </span>
         </div>
         <p class="what">
