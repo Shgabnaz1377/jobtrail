@@ -119,6 +119,11 @@ describe('data isolation between users', () => {
     expect((await bob.get<unknown[]>('/api/reminders')).body).toEqual([])
   })
 
+  it('computes stats from each user\'s own data only', async () => {
+    expect((await bob.get<{ total: number }>('/api/stats')).body.total).toBe(0)
+    expect((await alice.get<{ total: number }>('/api/stats')).body.total).toBe(1)
+  })
+
   it('cannot read, modify, move or delete another user\'s application', async () => {
     const path = `/api/applications/${aliceApp.id}`
     expect((await bob.get(path)).status).toBe(404)
