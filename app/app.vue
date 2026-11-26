@@ -7,6 +7,11 @@ useHead({
   },
   titleTemplate: title => (title && title !== 'JobTrail' ? `${title} · JobTrail` : 'JobTrail'),
 })
+
+// Lets browser tests (and anything else) wait until the page is interactive.
+onMounted(() => {
+  document.documentElement.dataset.hydrated = 'true'
+})
 </script>
 
 <template>

@@ -74,6 +74,21 @@ describe('KanbanBoard', () => {
     wrapper.unmount()
   })
 
+  it('does not let a background refresh undo a keyboard move in progress', async () => {
+    const wrapper = await mountBoard()
+    const handle = () => wrapper.get('[data-card-handle="1"]')
+
+    await handle().trigger('keydown', { key: ' ' })
+    await handle().trigger('keydown', { key: 'ArrowRight' })
+    // Server data from before the move arrives (e.g. the refresh after an earlier move).
+    await wrapper.setProps({ cards: cards.map(c => ({ ...c })) })
+    expect(companiesIn(wrapper, 'interview')).toEqual(['Acme', 'Initech'])
+    await handle().trigger('keydown', { key: ' ' })
+
+    expect(wrapper.emitted('move')).toEqual([[{ id: '1', status: 'interview', position: 0 }]])
+    wrapper.unmount()
+  })
+
   it('offers a stage picker that moves the card to the end of the new column', async () => {
     const wrapper = await mountBoard()
     await wrapper.get('.column-applied [data-card-id="1"] select').setValue('interview')

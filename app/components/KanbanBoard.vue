@@ -11,9 +11,23 @@ const emit = defineEmits<{
 }>()
 
 const columns = ref(toColumns(props.cards))
+// Server data that arrived while a card was in the user's hands. Applying it
+// mid-move would yank the card back to its old spot, so it waits for the drop.
+let deferredCards: KanbanCardData[] | null = null
+
 watch(() => props.cards, (cards) => {
+  if (grabbedId.value || draggingId.value) {
+    deferredCards = cards
+    return
+  }
   columns.value = toColumns(cards)
 }, { deep: true })
+
+/** Called when a move ends without being committed (cancel or no-op drop). */
+function applyDeferred() {
+  if (deferredCards) columns.value = toColumns(deferredCards)
+  deferredCards = null
+}
 
 const announcement = ref('')
 
@@ -64,13 +78,19 @@ function onHandleKeydown(id: string, event: KeyboardEvent) {
     announcement.value = `Dropped ${cardName(id)} in ${describe(id)}.`
     const moved = location && grabbedFrom
       && (location.status !== grabbedFrom.status || location.index !== grabbedFrom.index)
-    if (moved) commit(id)
+    if (moved) {
+      // A refresh follows the commit, so data deferred during the move is stale.
+      deferredCards = null
+      commit(id)
+    }
+    else applyDeferred()
     return
   }
 
   if (key === 'Escape') {
     event.preventDefault()
     if (beforeGrab) columns.value = beforeGrab
+    applyDeferred()
     grabbedId.value = null
     announcement.value = `Move cancelled. ${cardName(id)} is back in ${describe(id)}.`
     refocus(id)
@@ -100,8 +120,10 @@ function onHandleBlur(id: string) {
     const location = locate(columns.value, id)
     announcement.value = `Dropped ${cardName(id)} in ${describe(id)}.`
     if (location && grabbedFrom && (location.status !== grabbedFrom.status || location.index !== grabbedFrom.index)) {
+      deferredCards = null
       commit(id)
     }
+    else applyDeferred()
   }, 0)
 }
 
@@ -138,20 +160,26 @@ function onDrop(status: Status, event: DragEvent) {
   const target = dropTarget.value
   draggingId.value = null
   dropTarget.value = null
-  if (!id || !target || target.status !== status) return
+  if (!id || !target || target.status !== status) {
+    applyDeferred()
+    return
+  }
 
   const before = locate(columns.value, id)
   columns.value = moveCard(columns.value, id, target.status, target.index)
   const after = locate(columns.value, id)
   if (before && after && (before.status !== after.status || before.index !== after.index)) {
     announcement.value = `Moved ${cardName(id)} to ${describe(id)}.`
+    deferredCards = null
     commit(id)
   }
+  else applyDeferred()
 }
 
 function onDragEnd() {
   draggingId.value = null
   dropTarget.value = null
+  applyDeferred()
 }
 
 /** Id of the card the drop marker sits in front of, or null for the end of the column. */
